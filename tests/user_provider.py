@@ -10,6 +10,7 @@ class User(User):
         self.active = active
         self.name = name
 
+
 @Service('providers.repository.user')
 class UserProvider(Provider[User]):
 

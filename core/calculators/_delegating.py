@@ -1,5 +1,6 @@
 from ._calculator import Calculator
-from kylin import Scope
+from ._exceptions import UnknownCalculateToStrategyError
+from kylin import Scope, ServiceNotFoundException
 
 
 class DelegatingCalculator(Calculator):
@@ -11,7 +12,10 @@ class DelegatingCalculator(Calculator):
     def scope(self): return Scope()
 
     async def calculate(self, strategy: str, *args, **kwargs):
-        return await self.scope['{prefix}.{strategy}'.format(
-            strategy=strategy,
-            prefix=self.calculators_prefix
-        )].calculate(*args, **kwargs)
+        try:
+            return await self.scope['{prefix}.{strategy}'.format(
+                strategy=strategy,
+                prefix=self.calculators_prefix
+            )].calculate(*args, **kwargs)
+        except ServiceNotFoundException as error:
+            raise UnknownCalculateToStrategyError(strategy)
