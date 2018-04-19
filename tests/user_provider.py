@@ -11,7 +11,7 @@ class User(User):
         self.name = name
 
 
-@Service('providers.repository.user')
+@Service('providers.auth.user')
 class UserProvider(Provider[User]):
 
     users = [
